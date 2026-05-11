@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Web.Script.Serialization; // Теперь заработает после шага №2
+using System.Web.Script.Serialization;
 
 namespace SecureNotesApp
 {
@@ -16,7 +16,7 @@ namespace SecureNotesApp
 
         public MainWindow(string password)
         {
-            InitializeComponent(); // Это должно быть ПЕРВОЙ строкой
+            InitializeComponent();
             _masterPassword = password;
             LoadData();
         }
@@ -79,7 +79,6 @@ namespace SecureNotesApp
         {
             if (NotesListBox.SelectedItem is Note selected)
             {
-                // Окно подтверждения удаления
                 var result = MessageBox.Show(
                     $"Вы уверены, что хотите удалить заметку \"{selected.Title}\"?",
                     "Подтверждение удаления",

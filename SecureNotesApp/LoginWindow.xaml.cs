@@ -20,7 +20,7 @@ namespace SecureNotesApp
             }
             else
             {
-                MessageBox.Show("Введите мастер-пароль для расшифровки данных!");
+                MessageBox.Show("Введите пароль!");
             }
         }
     }
