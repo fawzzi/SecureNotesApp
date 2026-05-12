@@ -2,7 +2,7 @@
 
 namespace SecureNotesApp
 {
-    public partial class LoginWindow : Window
+    public partial class LoginWindow
     {
         public string Password { get; private set; }
 
@@ -16,7 +16,7 @@ namespace SecureNotesApp
             if (!string.IsNullOrWhiteSpace(MasterPasswordBox.Password))
             {
                 Password = MasterPasswordBox.Password;
-                this.DialogResult = true;
+                DialogResult = true;
             }
             else
             {

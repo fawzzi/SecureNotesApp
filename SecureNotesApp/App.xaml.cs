@@ -2,28 +2,28 @@
 
 namespace SecureNotesApp
 {
-    public partial class App : Application
+    public partial class App
     {
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            LoginWindow loginWindow = new LoginWindow();
+            var loginWindow = new LoginWindow();
 
             if (loginWindow.ShowDialog() == true)
             {
-                MainWindow mainWindow = new MainWindow(loginWindow.Password);
+                var mainWindow = new MainWindow(loginWindow.Password);
 
-                this.ShutdownMode = ShutdownMode.OnLastWindowClose;
+                ShutdownMode = ShutdownMode.OnLastWindowClose;
 
-                this.MainWindow = mainWindow;
+                MainWindow = mainWindow;
                 mainWindow.Show();
             }
             else
             {
-                this.Shutdown();
+                Shutdown();
             }
         }
     }

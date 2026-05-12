@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Вход в систему" Height="200" Width="300" WindowStartupLocation="CenterScreen">
     <StackPanel Margin="20" VerticalAlignment="Center">
-        <TextBlock Text="Введите мастер-пароль:" Margin="0,0,0,10" HorizontalAlignment="Center"/>
-        <PasswordBox x:Name="MasterPasswordBox" Margin="0,0,0,20"/>
-        <Button Content="Войти" Click="Login_Click" IsDefault="True" Height="30"/>
+        <TextBlock Text="Введите мастер-пароль:" Margin="0,0,0,10" HorizontalAlignment="Center" />
+        <PasswordBox x:Name="MasterPasswordBox" Margin="0,0,0,20" />
+        <Button Content="Войти" Click="Login_Click" IsDefault="True" Height="30" />
     </StackPanel>
 </Window>
