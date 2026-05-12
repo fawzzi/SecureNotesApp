@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using System.Resources;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -26,7 +24,7 @@ using System.Windows;
 //в <PropertyGroup>. Например, при использовании английского (США)
 //в своих исходных файлах установите <UICulture> в en-US.  Затем отмените преобразование в комментарий
 //атрибута NeutralResourceLanguage ниже.  Обновите "en-US" в
-//строка внизу для обеспечения соответствия настройки UICulture в файле проекта.
+//строке внизу для обеспечения соответствия настройки UICulture в файле проекта.
 
 //[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
 

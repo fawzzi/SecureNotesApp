@@ -7,12 +7,12 @@ using System.Web.Script.Serialization;
 
 namespace SecureNotesApp
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         private List<Note> _allNotes = new List<Note>();
-        private string _masterPassword = "test";
-        private string _filePath = "data.bin";
-        private JavaScriptSerializer _serializer = new JavaScriptSerializer();
+        private readonly string _masterPassword;
+        private const string FilePath = "data.bin";
+        private readonly JavaScriptSerializer _serializer = new JavaScriptSerializer();
 
         public MainWindow(string password)
         {
@@ -20,32 +20,34 @@ namespace SecureNotesApp
             _masterPassword = password;
             LoadData();
         }
+
         private void LoadData()
         {
-            if (File.Exists(_filePath))
+            if (!File.Exists(FilePath)) return;
+
+            try
             {
-                try
-                {
-                    string encrypted = File.ReadAllText(_filePath);
-                    string json = EncryptionService.Decrypt(encrypted, _masterPassword);
-                    if (!string.IsNullOrEmpty(json))
-                    {
-                        _allNotes = _serializer.Deserialize<List<Note>>(json);
-                        RefreshList();
-                    }
-                }
-                catch
-                {
-                    MessageBox.Show("Ошибка при загрузке данных.");
-                }
+                var encrypted = File.ReadAllText(FilePath);
+                var json = EncryptionService.Decrypt(encrypted, _masterPassword);
+
+                if (string.IsNullOrEmpty(json)) return;
+
+                _allNotes = _serializer.Deserialize<List<Note>>(json);
+
+                RefreshList();
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка при загрузке данных.");
             }
         }
 
         private void SaveData()
         {
-            string json = _serializer.Serialize(_allNotes);
-            string encrypted = EncryptionService.Encrypt(json, _masterPassword);
-            File.WriteAllText(_filePath, encrypted);
+            var json = _serializer.Serialize(_allNotes);
+            var encrypted = EncryptionService.Encrypt(json, _masterPassword);
+
+            File.WriteAllText(FilePath, encrypted);
         }
 
         private void RefreshList()
@@ -57,6 +59,7 @@ namespace SecureNotesApp
         private void AddNote_Click(object sender, RoutedEventArgs e)
         {
             var note = new Note { Title = "Новая заметка", Content = "", UpdatedAt = DateTime.Now };
+
             _allNotes.Add(note);
             RefreshList();
             NotesListBox.SelectedItem = note;
@@ -64,50 +67,51 @@ namespace SecureNotesApp
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            if (NotesListBox.SelectedItem is Note selected)
-            {
-                selected.Title = TitleTextBox.Text;
-                selected.Content = ContentTextBox.Text;
-                selected.UpdatedAt = DateTime.Now;
-                SaveData();
-                RefreshList();
-                MessageBox.Show("Сохранено!");
-            }
+            if (!(NotesListBox.SelectedItem is Note selected)) return;
+
+            selected.Title = TitleTextBox.Text;
+            selected.Content = ContentTextBox.Text;
+            selected.UpdatedAt = DateTime.Now;
+
+            SaveData();
+            RefreshList();
+
+            MessageBox.Show("Сохранено!");
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            if (NotesListBox.SelectedItem is Note selected)
-            {
-                var result = MessageBox.Show(
-                    $"Вы уверены, что хотите удалить заметку \"{selected.Title}\"?",
-                    "Подтверждение удаления",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
+            if (!(NotesListBox.SelectedItem is Note selected)) return;
 
-                if (result == MessageBoxResult.Yes)
-                {
-                    _allNotes.Remove(selected);
-                    SaveData();
-                    RefreshList();
-                    TitleTextBox.Clear();
-                    ContentTextBox.Clear();
-                }
-            }
+            var result = MessageBox.Show(
+                $"Вы уверены, что хотите удалить заметку \"{selected.Title}\"?",
+                "Подтверждение удаления",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes) return;
+
+            _allNotes.Remove(selected);
+
+            SaveData();
+            RefreshList();
+
+            TitleTextBox.Clear();
+            ContentTextBox.Clear();
         }
 
         private void NotesListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (NotesListBox.SelectedItem is Note selected)
-            {
-                TitleTextBox.Text = selected.Title;
-                ContentTextBox.Text = selected.Content;
-            }
+            if (!(NotesListBox.SelectedItem is Note selected)) return;
+
+            TitleTextBox.Text = selected.Title;
+            ContentTextBox.Text = selected.Content;
         }
 
         private void SearchBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            string query = SearchBox.Text.ToLower();
+            var query = SearchBox.Text.ToLower();
+
             NotesListBox.ItemsSource = _allNotes
                 .Where(n => n.Title.ToLower().Contains(query) || n.Content.ToLower().Contains(query))
                 .ToList();
